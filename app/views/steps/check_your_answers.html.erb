@@ -8,6 +8,13 @@
       <table class="table border-danger m-0">
         <tbody class="table-group-divider border-danger">
           <% question_page_number = 0 %>
+          <thead>
+            <tr>
+              <th class="text-center" scope="col"><%= t('check_answers.table.number') %></th>
+              <th scope="col"><%= t('check_answers.table.question') %></th>
+              <th scope="col"><%= t('check_answers.table.answer') %></th>
+              <th class="text-center" scope="col"><%= t('check_answers.table.change') %></th>
+            </tr>
           <% @quiz_results.answer.each do |question, answers| %>
             <% question_page_number += 1 %>
             <%= answers.each_with_index do |answer, index| %>
