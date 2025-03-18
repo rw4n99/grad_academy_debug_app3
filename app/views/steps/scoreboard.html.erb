@@ -6,6 +6,16 @@
   <table class="table mt-4">
     <tbody class="table-group-divider border-danger">
       <% @top_scores.each_with_index do |answer, _index| %>
+        <thead>
+          <tr>
+          <% if _index == 0 %>
+            <th scope="col"><%= t('scoreboard.table.quiz') %></th>
+            <th scope="col"><%= t('scoreboard.table.username') %></th>
+            <th scope="col"><%= t('scoreboard.table.date_attempted') %></th>
+            <th scope="col"><%= t('scoreboard.table.score') %></th>
+            <th scope="col"><%= t('scoreboard.table.download') %></th>
+          <% end %>
+            
         <tr>
           <td>
             <%= t('scoreboard.table.quiz_number', id: answer.id) %>
