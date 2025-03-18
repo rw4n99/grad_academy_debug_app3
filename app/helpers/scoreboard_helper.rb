@@ -18,7 +18,7 @@ module ScoreboardHelper
   def generate_csvs(scores)
     return CSV.generate { |csv| csv << %w[Quiz Username Date Score] } if scores.empty?
 
-    CSV.generate(encoding: 'UTF-7') do |csv|
+    CSV.generate do |csv|
       csv << %w[Quiz Username Date Score]
       scores.each do |score|
         user = score.user
@@ -28,7 +28,6 @@ module ScoreboardHelper
       end
     end
   end
-
   # Generates a detailed CSV file for a single quiz score, including quiz details,
   # usernames, dates, and answers given versus correct answers.
   #
