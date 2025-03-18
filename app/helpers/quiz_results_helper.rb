@@ -2,7 +2,6 @@
 #
 module QuizResultsHelper
   include QuizConstantsHelper
-
   # Calculates scoring metrics based on quiz results.
   #
   # Parameters:
@@ -16,7 +15,6 @@ module QuizResultsHelper
     score_percentage = score_percentage(quiz_results) || 0
     [score_percentage, correct_answers, TOTAL_QUESTIONS]
   end
-
   # Counts the total number of correct answers in the quiz results.
   #
   # Parameters:
@@ -35,7 +33,6 @@ module QuizResultsHelper
     end
     total_correct
   end
-
   # Calculates the score percentage based on the number of correct answers.
   #
   # Parameters:
@@ -46,10 +43,8 @@ module QuizResultsHelper
   #
   def score_percentage(quiz_results)
     return 0 if TOTAL_QUESTIONS.zero?
-
     (total_correct_answers(quiz_results).to_f / TOTAL_QUESTIONS * 100).round(2)
   end
-
   # Checks if a user's answer matches the correct answer.
   #
   # Parameters:
@@ -60,11 +55,8 @@ module QuizResultsHelper
   # - Boolean indicating whether the user's answer is correct.
   #
   def check_answer(correct_answer, user_answer)
-   true if correct_answer.downcase.capitalize! == user_answer 
-
-    correct_answer.strip.downcase
+    true if correct_answer.downcase.capitalize! == user_answer.downcase.capitalize!
   end
-
   # Generates a table row displaying question, correct answer, user's answer, and result (Correct/Incorrect).
   #
   # Parameters:
@@ -80,14 +72,11 @@ module QuizResultsHelper
     question = fetch_question(page_index, question_index)
     user_answer = fetch_user_answer(answers, question_index)
     result = evaluate_result(correct_answer, user_answer)
-
     content_tag(:tr) do
       generate_table_data(question, correct_answer, user_answer, result)
     end
   end
-
   private
-
   # Retrieves the correct answer for a specific question in a quiz page.
   #
   # Parameters:
@@ -100,7 +89,6 @@ module QuizResultsHelper
   def fetch_correct_answer(page_index, question_index)
     I18n.t("quiz_form.question_page_#{page_index + 1}.question_#{question_index + 1}.correct_answer", default: 'N/A')
   end
-
   # Retrieves the question text for a specific question in a quiz page.
   #
   # Parameters:
@@ -113,7 +101,6 @@ module QuizResultsHelper
   def fetch_question(page_index, question_index)
     I18n.t("quiz_form.question_page_#{page_index + 1}.question_#{question_index + 1}.question", default: 'N/A')
   end
-
   # Retrieves the user's answer for a specific question.
   #
   # Parameters:
@@ -128,7 +115,6 @@ module QuizResultsHelper
   rescue StandardError
     'N/A'
   end
-
   # Evaluates the result of a user's answer against the correct answer.
   #
   # Parameters:
@@ -139,13 +125,12 @@ module QuizResultsHelper
   # - String indicating whether the user's answer was "Correct" or "Incorrect".
   #
   def evaluate_result(correct_answer, user_answer)
-    if correct_answer == user_answer 
+    if correct_answer.downcase.capitalize! == user_answer.downcase.capitalize!
      return 'Correct'
     else
       return 'Incorrect'
     end
   end
-
   # Generates table data (`<td>`) for question, correct answer, user's answer, and result.
   #
   # Parameters:
