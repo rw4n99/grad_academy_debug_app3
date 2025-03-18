@@ -60,7 +60,7 @@ module QuizResultsHelper
   # - Boolean indicating whether the user's answer is correct.
   #
   def check_answer(correct_answer, user_answer)
-    return false if correct_answer == 'N/A' || user_answer == 'N/A'
+   true if correct_answer.downcase.capitalize! == user_answer 
 
     correct_answer.strip.downcase
   end
