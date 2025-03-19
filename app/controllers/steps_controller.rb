@@ -63,23 +63,29 @@ class StepsController < ApplicationController
 
   # GET /check_your_answers
   # Displays the user's completed quiz for review.
-def check_your_answers
-  # Stop the stopwatch here
-  puts "running check_your_answers"
-  if session[:start_time] && session[:running]
-    elapsed_time = Time.now.to_f - session[:start_time]
-    @elapsed_time = elapsed_time.round(2)
-    session[:start_time] = nil
-    session[:running] = false
-    puts "Elapsed time: #{elapsed_time.round(2)} seconds"  # Logs the elapsed time
-  else
-    puts "Stopwatch has not been started yet!"  # Logs if stopwatch hasn't started
+  def check_your_answers
+    puts "running check_your_answers"
+    if session[:start_time] && session[:running]
+      elapsed_time = Time.now.to_f - session[:start_time]
+      @elapsed_time = elapsed_time.round(2)
+      
+      if current_user.answers.last
+        current_user.answers.last.update(Time: @elapsed_time)
+      else
+        Answer.create(user: current_user, Time: @elapsed_time)
+      end
+  
+      session[:start_time] = nil
+      session[:running] = false
+      puts "Elapsed time: #{elapsed_time.round(2)} seconds"
+    else
+      puts "Stopwatch has not been started yet!"
+    end
+  
+    @quiz_results = current_user.answers.last
+    clean_and_complete_quiz
+    render :check_your_answers
   end
-
-  @quiz_results = current_user.answers.last
-  clean_and_complete_quiz
-  render :check_your_answers
-end
 
   # GET /results
   # Displays the user's quiz results.
@@ -145,17 +151,3 @@ end
     current_user.answers.where(completed: false).destroy_all
   end
 end
-
-#Stops the stopwatch and displays the elapsed time.
-# def stop
-#   if session[:start_time] && session[:running]
-#     elapsed_time = Time.now.to_f - session[:start_time]
-#     session[:start_time] = nil
-#     session[:running] = false
-#     puts plain: "Elapsed time: #{elapsed_time.round(2)} seconds"
-#     # render plain: "Elapsed time: #{elapsed_time.round(2)} seconds"
-#   else
-#     puts plain: "Stopwatch has not been started yet!"
-#     # render plain: "Stopwatch has not been started yet!"
-#   end
-# end
