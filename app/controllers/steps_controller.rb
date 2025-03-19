@@ -68,6 +68,7 @@ def check_your_answers
   puts "running check_your_answers"
   if session[:start_time] && session[:running]
     elapsed_time = Time.now.to_f - session[:start_time]
+    @elapsed_time = elapsed_time.round(2)
     session[:start_time] = nil
     session[:running] = false
     puts "Elapsed time: #{elapsed_time.round(2)} seconds"  # Logs the elapsed time
