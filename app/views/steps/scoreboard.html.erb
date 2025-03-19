@@ -13,6 +13,7 @@
             <th scope="col"><%= t('scoreboard.table.username') %></th>
             <th scope="col"><%= t('scoreboard.table.date_attempted') %></th>
             <th scope="col"><%= t('scoreboard.table.score') %></th>
+            <th scope="col"><%= "Time" %></th>
             <th scope="col"><%= t('scoreboard.table.download') %></th>
           <% end %>
             
@@ -28,6 +29,9 @@
           </td>
           <td>
             <%= answer.score %>%
+          </td>
+          <td>
+            <%= answer.Time %>
           </td>
           <td>
             <%= link_to download_steps_path(format: :csv, id: answer.id), class: 'link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-25-hover d-flex align-items-center' do %>

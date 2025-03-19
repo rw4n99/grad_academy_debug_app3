@@ -35,7 +35,7 @@ class QuizForm
   include ActiveModel::Model
   include QuizConstantsHelper
 
-  attr_accessor :answer_1, :answer_2, :answer_3, :answer_4, :answer_5, :current_step, :current_user_id, :answer
+  attr_accessor :answer_1, :answer_2, :answer_3, :answer_4, :answer_5, :current_step, :current_user_id, :answer, :elapsed_time
 
   validate :validate_answers
 
@@ -149,7 +149,7 @@ class QuizForm
 
   # Creates a new quiz answer record.
   def create_new_answer
-    answer = Answer.new(user: current_user, answer: build_answer_object, date_attempted: Time.zone.today,
+    answer = Answer.new(user: current_user, answer: build_answer_object, date_attempted: Time.zone.today, Time: @elapsed_time,
                         completed: false)
     if answer.valid?
       answer.save!

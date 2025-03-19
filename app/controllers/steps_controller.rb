@@ -15,12 +15,23 @@ class StepsController < ApplicationController
 
   # GET /steps/:id
   # Displays the quiz form for the specified step.
+  def start_timer
+    session[:start_time] = Time.now.to_f
+    session[:running] = true
+    puts plain: "Stopwatch started!"
+  end
+
   def show
     if params[:encoded_params].present?
       @quiz_form = QuizForm.new(decoded_params.permit(:current_step, quiz_results: []))
       @quiz_form.current_user_id = current_user.id
     else
       @quiz_form = QuizForm.new(current_step: params[:id].to_i, current_user_id: current_user.id)
+    end
+
+    if @quiz_form.current_step == 1
+      start_timer
+
     end
 
     restore_quiz_form_state
@@ -53,6 +64,24 @@ class StepsController < ApplicationController
   # GET /check_your_answers
   # Displays the user's completed quiz for review.
   def check_your_answers
+    puts "running check_your_answers"
+    if session[:start_time] && session[:running]
+      elapsed_time = Time.now.to_f - session[:start_time]
+      @elapsed_time = elapsed_time.round(2)
+      
+      if current_user.answers.last
+        current_user.answers.last.update(Time: @elapsed_time)
+      else
+        Answer.create(user: current_user, Time: @elapsed_time)
+      end
+  
+      session[:start_time] = nil
+      session[:running] = false
+      puts "Elapsed time: #{elapsed_time.round(2)} seconds"
+    else
+      puts "Stopwatch has not been started yet!"
+    end
+  
     @quiz_results = current_user.answers.last
     clean_and_complete_quiz
     render :check_your_answers

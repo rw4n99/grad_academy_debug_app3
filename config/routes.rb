@@ -20,9 +20,14 @@ Rails.application.routes.draw do
         get 'check_your_answers', to: 'steps#check_your_answers'
         get 'results', to: 'steps#results'
         get 'scoreboard', to: 'steps#scoreboard'
+        get 'stop', to: 'steps#check_your_answers'
         get 'download', to: 'steps#download'
       end
     end
+
+    # Stopwatch controller routes
+    get 'stopwatch/start', to: 'stopwatch#start'
+
   end
 
   # Catch-all route for handling 404 Not Found

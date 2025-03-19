@@ -2,6 +2,9 @@
 <div id="check-answers" class="container d-flex flex-column align-items-center mt-4 mb-4 pt-5">
   <h1 class="text-danger text-center"><%= t('check_answers.heading') %></h1>
   <hr class="border border-danger w-100 border-2 my-2">
+  <p class="text-center">
+    <%= "Well done, #{current_user.username}! It took you #{@elapsed_time} seconds" %>
+  </p>
 
   <div class="border border-danger border-bottom-0 rounded overflow-hidden mt-4 w-100">
     <div class="table-responsive">
