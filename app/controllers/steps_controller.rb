@@ -15,12 +15,23 @@ class StepsController < ApplicationController
 
   # GET /steps/:id
   # Displays the quiz form for the specified step.
+  def start_timer
+    session[:start_time] = Time.now.to_f
+    session[:running] = true
+    puts plain: "Stopwatch started!"
+  end
+
   def show
     if params[:encoded_params].present?
       @quiz_form = QuizForm.new(decoded_params.permit(:current_step, quiz_results: []))
       @quiz_form.current_user_id = current_user.id
     else
       @quiz_form = QuizForm.new(current_step: params[:id].to_i, current_user_id: current_user.id)
+    end
+
+    if @quiz_form.current_step == 1
+      start_timer
+
     end
 
     restore_quiz_form_state
@@ -52,11 +63,22 @@ class StepsController < ApplicationController
 
   # GET /check_your_answers
   # Displays the user's completed quiz for review.
-  def check_your_answers
-    @quiz_results = current_user.answers.last
-    clean_and_complete_quiz
-    render :check_your_answers
+def check_your_answers
+  # Stop the stopwatch here
+  puts "running check_your_answers"
+  if session[:start_time] && session[:running]
+    elapsed_time = Time.now.to_f - session[:start_time]
+    session[:start_time] = nil
+    session[:running] = false
+    puts "Elapsed time: #{elapsed_time.round(2)} seconds"  # Logs the elapsed time
+  else
+    puts "Stopwatch has not been started yet!"  # Logs if stopwatch hasn't started
   end
+
+  @quiz_results = current_user.answers.last
+  clean_and_complete_quiz
+  render :check_your_answers
+end
 
   # GET /results
   # Displays the user's quiz results.
@@ -122,3 +144,17 @@ class StepsController < ApplicationController
     current_user.answers.where(completed: false).destroy_all
   end
 end
+
+#Stops the stopwatch and displays the elapsed time.
+# def stop
+#   if session[:start_time] && session[:running]
+#     elapsed_time = Time.now.to_f - session[:start_time]
+#     session[:start_time] = nil
+#     session[:running] = false
+#     puts plain: "Elapsed time: #{elapsed_time.round(2)} seconds"
+#     # render plain: "Elapsed time: #{elapsed_time.round(2)} seconds"
+#   else
+#     puts plain: "Stopwatch has not been started yet!"
+#     # render plain: "Stopwatch has not been started yet!"
+#   end
+# end
