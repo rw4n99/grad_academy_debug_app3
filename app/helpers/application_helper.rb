@@ -21,7 +21,7 @@ module ApplicationHelper
   # Generates html for the Navbar logo
   def logo_html
     content_tag('h3', class: 'text-white fw-normal m-0') do
-      image_tag('logo-white.svg') + 'QUIZAPP'.html_safe
+      image_tag('logo-white.svg', alt: "Q Logo") + 'QUIZAPP'.html_safe
     end
   end
 end
